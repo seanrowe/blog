@@ -1,0 +1,26 @@
+{
+    "name": "ichab/blog",
+    "authors": [
+        {
+            "name": "Sean Rowe",
+            "email": "ichabooka@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim-skeleton": "3.1.2",
+        "propel/propel": "2.0.0-alpha6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blog\\Api\\": "api/",
+            "Blog\\Models\\": "models/Blog/Models",
+            "Blog\\Models\\Base\\": "models/Blog/Models/Base/",
+            "Blog\\Models\\Map\\": "models/Blog/Models/Map/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blog\\Spec\\": "spec/"
+        }
+    }
+}
