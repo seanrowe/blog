@@ -10,6 +10,7 @@ use Blog\Models\Map\UsersTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -34,6 +35,28 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUsersQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildUsersQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUsersQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildUsersQuery leftJoinPostsRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the PostsRelatedById relation
+ * @method     ChildUsersQuery rightJoinPostsRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PostsRelatedById relation
+ * @method     ChildUsersQuery innerJoinPostsRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the PostsRelatedById relation
+ *
+ * @method     ChildUsersQuery joinWithPostsRelatedById($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PostsRelatedById relation
+ *
+ * @method     ChildUsersQuery leftJoinWithPostsRelatedById() Adds a LEFT JOIN clause and with to the query using the PostsRelatedById relation
+ * @method     ChildUsersQuery rightJoinWithPostsRelatedById() Adds a RIGHT JOIN clause and with to the query using the PostsRelatedById relation
+ * @method     ChildUsersQuery innerJoinWithPostsRelatedById() Adds a INNER JOIN clause and with to the query using the PostsRelatedById relation
+ *
+ * @method     ChildUsersQuery leftJoinPostsRelatedByUserId($relationAlias = null) Adds a LEFT JOIN clause to the query using the PostsRelatedByUserId relation
+ * @method     ChildUsersQuery rightJoinPostsRelatedByUserId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PostsRelatedByUserId relation
+ * @method     ChildUsersQuery innerJoinPostsRelatedByUserId($relationAlias = null) Adds a INNER JOIN clause to the query using the PostsRelatedByUserId relation
+ *
+ * @method     ChildUsersQuery joinWithPostsRelatedByUserId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PostsRelatedByUserId relation
+ *
+ * @method     ChildUsersQuery leftJoinWithPostsRelatedByUserId() Adds a LEFT JOIN clause and with to the query using the PostsRelatedByUserId relation
+ * @method     ChildUsersQuery rightJoinWithPostsRelatedByUserId() Adds a RIGHT JOIN clause and with to the query using the PostsRelatedByUserId relation
+ * @method     ChildUsersQuery innerJoinWithPostsRelatedByUserId() Adds a INNER JOIN clause and with to the query using the PostsRelatedByUserId relation
+ *
+ * @method     \Blog\Models\PostsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUsers findOne(ConnectionInterface $con = null) Return the first ChildUsers matching the query
  * @method     ChildUsers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match is found
@@ -251,6 +274,8 @@ abstract class UsersQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
+     * @see       filterByPostsRelatedById()
+     *
      * @param     mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -330,6 +355,156 @@ abstract class UsersQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UsersTableMap::COL_PASSWORD, $password, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Blog\Models\Posts object
+     *
+     * @param \Blog\Models\Posts|ObjectCollection $posts The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUsersQuery The current query, for fluid interface
+     */
+    public function filterByPostsRelatedById($posts, $comparison = null)
+    {
+        if ($posts instanceof \Blog\Models\Posts) {
+            return $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $posts->getId(), $comparison);
+        } elseif ($posts instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $posts->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByPostsRelatedById() only accepts arguments of type \Blog\Models\Posts or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PostsRelatedById relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUsersQuery The current query, for fluid interface
+     */
+    public function joinPostsRelatedById($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PostsRelatedById');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PostsRelatedById');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PostsRelatedById relation Posts object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Blog\Models\PostsQuery A secondary query class using the current class as primary query
+     */
+    public function usePostsRelatedByIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPostsRelatedById($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PostsRelatedById', '\Blog\Models\PostsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Blog\Models\Posts object
+     *
+     * @param \Blog\Models\Posts|ObjectCollection $posts the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUsersQuery The current query, for fluid interface
+     */
+    public function filterByPostsRelatedByUserId($posts, $comparison = null)
+    {
+        if ($posts instanceof \Blog\Models\Posts) {
+            return $this
+                ->addUsingAlias(UsersTableMap::COL_ID, $posts->getUserId(), $comparison);
+        } elseif ($posts instanceof ObjectCollection) {
+            return $this
+                ->usePostsRelatedByUserIdQuery()
+                ->filterByPrimaryKeys($posts->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPostsRelatedByUserId() only accepts arguments of type \Blog\Models\Posts or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PostsRelatedByUserId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUsersQuery The current query, for fluid interface
+     */
+    public function joinPostsRelatedByUserId($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PostsRelatedByUserId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PostsRelatedByUserId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PostsRelatedByUserId relation Posts object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Blog\Models\PostsQuery A secondary query class using the current class as primary query
+     */
+    public function usePostsRelatedByUserIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPostsRelatedByUserId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PostsRelatedByUserId', '\Blog\Models\PostsQuery');
     }
 
     /**

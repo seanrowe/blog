@@ -1,0 +1,50 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "../app/src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanrowe/blog.git"
+  },
+  "author": "Sean Rowe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seanrowe/blog/issues"
+  },
+  "homepage": "https://github.com/seanrowe/blog#readme",
+  "devDependencies": {
+    "autoloader": "^2.1.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.5",
+    "browserify": "^13.1.1",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chalk": "^1.1.3",
+    "child_process": "^1.0.2",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-load-plugins": "^1.4.0",
+    "gulp-protractor": "latest",
+    "gulp-sass": "^3.0.0",
+    "gulp-sourcemaps": "^1.9.1",
+    "gulp-typescript": "^3.1.3",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "gutil": "^1.6.4",
+    "path": "^0.12.7",
+    "protractor": "^4.0.13",
+    "react": "^15.4.1",
+    "run-sequence": "^1.2.2",
+    "tsify": "^2.0.7",
+    "typescript": "^2.1.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.8.0"
+  }
+}

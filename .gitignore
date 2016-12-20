@@ -1,4 +1,5 @@
-
 .idea/
-api/conf/config.php
-api/propel.yml
+conf/config.php
+conf/propel.yml
+api/vendor/
+node_modules/

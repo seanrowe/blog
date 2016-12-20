@@ -1,0 +1,30 @@
+{
+    "name": "ichab/blog",
+    "config": {
+        "vendor-dir": "composer"
+    },
+    "authors": [
+        {
+            "name": "Sean Rowe",
+            "email": "ichabooka@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim-skeleton": "3.1.2",
+        "propel/propel": "2.0.0-alpha6",
+        "behat/behat": "3.2.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blog\\Services\\": "../api/services/",
+            "Blog\\Models\\": "../api/models/Blog/Models",
+            "Blog\\Models\\Base\\": "../api/models/Blog/Models/Base/",
+            "Blog\\Models\\Map\\": "../api/models/Blog/Models/Map/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blog\\Spec\\": "../api/spec/"
+        }
+    }
+}
